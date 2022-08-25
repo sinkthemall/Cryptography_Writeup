@@ -85,13 +85,14 @@ After finishing this problem, I asked other members about how they pass it. And 
 -   We dive 6 chest into 2 group. Group 1 contains chest 1, chest 2, chest 3. Group 2 contains chest 4, chest 5, chest 6.
 -   Next, we use 2 question to ask Merchant. We ask the Merchant ``` if there is a fake chest in Group 1( fake chest means chest's answer is lie, from now, i will call a lie is a fake asnwer, fake chest, ...)```. The same question is ask to Group 2. There will be 3 cases total (at this part, we have 6 question left):
     -   Merchant's answer is ``` YES YES```:  
-        This means Group 1 and Group 2, each group contains a fake answer( whether the ``` YES ``` is fake or real, we will know excatly that each group have 1 fake). So the rest 6 question is Real answer, we just ask the chests's value and it's done.
+        This means Group 1 and Group 2, each group contains a fake answer( whether the ``` YES ``` is fake or real, we will know excatly that each group have 1 fake). So the rest 6 question is Real answer, we just ask the chests's value and it's done.  
+
     -   Merchant's answer is ``` NO NO ```:
         In this case, the fake answer can be ``` 0 2 ``` (0 2 in here means there isn't fake answer in this group1 or there are 2 fake asnwer) in each group . Because if the ``` NO ``` answer is fake, then that group have at least 1 fake answer ( thus 1 fake from ``` NO ``` + 1 fake from Group 1 = 2, we have used up 2 fake answer), and if the ``` NO ``` is real, it means that group have no fake answer, total fake asnwer we know will be = 0.  
         Our fake answer in each group right now are ``` 0 / 2 ``` or ``` 2 / 0 ``` or ``` 0 / 0 ```.
         Next we ask again the question ``` if there is a fake chest in Group 1 ``` (at this point we have 5 left).  
         There will be 2 case:  
-        
+
         -   ``` NO ```: this answer can be fake, because if it's fake, then the previous answer is also fake, and there exist 1 fake answer in group 1, total is 1 + 1 + 1 = 3 (impossible). So the Group 1 is real.  
             To deal with this case, we use the following algorithm:  
             Let's assume the temporary state of each chest in Group 2 is ``` 0 0 0 ```. Ask each chest value again(at this point, 2 question remain). There will be 3 case:  
@@ -122,4 +123,39 @@ After finishing this problem, I asked other members about how they pass it. And 
 
         -   ``` YES ```: either this is real or fake, the Group 2 will be real( ``` NO ``` answer and the chests's state are real). Because if ``` YES ``` is real, we already use 2 fake answer in group1, if it's fake, then the other fake question can not be in group 2(fake answer in group 2 can only be 0 or 2). Again, ask another question ``` if there is a fake chest in Group 1 ``` (at this point, we have 4 left).  
             -   If ``` YES ```, the Group 1 is definitely contains 1 fake chest, and ``` NO ``` answer is fake, 4 question left, we use to ask the group1 state and it's done
-            -   If ``` NO ```, Group 1 is real, we don't need to do anything.
+            -   If ``` NO ```, Group 1 is real, we don't need to do anything.  
+
+    -   Merchant's answer is ``` NO YES ```:  
+    Definitely, ``` NO ``` is real, and that group is real too.(as NO answer giving that fake answer can only be 0 or 2, and the YES answer make sure that group have 1 fake answer, so we mst conclude NO is real). So, we only have at most 1 fake answer left. We use the following algorithm for the ``` YES ``` group:
+    Again, let's the temporary state is ``` 0 0 0 ``` (I want to use temporary state as an example so you could make the algorithm for the other case). 
+    We gonna ask each collumn (2 questions), then move to next collumn and do the same until we get the value 1(If you get 1, change to next collumn immediately to ask). If zero collumn(full collumn) or two 1 appear, stop immediately
+    Example :
+    ```
+    0 0 0      0 0 0      0 0 0
+    1 0    or  0 1    or  0
+      1        1          0  
+    ```
+    NOTE : if you see a full collumn with zero, remove it from the matrix.
+    Example:
+    ```
+    0 0 0                 0 0                            |     0 0 0              0 0
+    0       will become       (remove the first collumn) | or  1 0   will become  1
+    0                                                    |       0
+    ```
+    Cases will be:
+    -   there are two 1 in matrix and remain questions is greater than or equal to the unknow chest: this case, remain questions are real, just ask the value
+    -   ``` 
+        0 0  (after asking) --->  0 0 (case 1)  or 0 0 (case 2)
+        1                         1 0              1 1
+        ```  
+        This case , ask the second collumn, if we in case 2, 2 questions left are real, we just need to ask for value and it's done. If we in case 1, collumn 2 is real, we have to deal with collumn 1. Again, ask the group ``` if there is a fake chest in the group ``` two times. If one ``` YES ``` in two answer, collumn 2 is real, collumn 1 is fake, and its value is 1(collumn 1 : 1, collumn2 : 0). If both answers are ``` NO ``` , collumn 1 and 2 is real (collumn 1 : 0, collumn2 : 0)
+    -   ```
+        0 0
+        0   
+        1
+        ```
+        This case, ask the group ``` if there is a fake chest in the group ``` two times.  
+        If ``` YES YES ```, collumn 1 is fake, collumn 2 is real( as two YES answer cannot be fake)  
+        If ``` NO NO ```, collumn 1 and 2 is real (two NO answer cannot be fake)
+        If ``` YES NO ``` or ``` NO YES ```, this is the hardest case, as we cannot figure out which is fake and real, so this case I let it randomly. But the chance to be in this case is very small ( about 8%). If you are not a fan of gaccha game, or just really bad luck, this definitely works very well.
+About the source code, I won't paste it in here as the source is about 500 codelines. So if you want to know more about it, I will let the link 
