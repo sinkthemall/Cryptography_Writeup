@@ -73,4 +73,16 @@ print(long_to_bytes(flag))
 ```
 ## 2. nanoDiamond
 [Problem's source code](https://github.com/sinkthemall/Cryptography_Writeup/tree/main/wmctf_writeup2022/problem/nanoDiamond)
+Problem's summary:
+-   In this problem we have to pass exactly 50 rounds.
+-   Each round we have 6 chest, each chest contains either 0 or 1, our problem is to find total 6 chest's state.
+-   We can find chests's state by asking question to the Skeleton Merchant, he will only anwer Yes or No. And we are able to ask him 14 question, but he might lie to us at most twice.
+-   After 14 questions, we have to give the correct chests's state. If the answer wrong even 1 chest, we lose, but if we can pass to 50 rounds, we will be given the flag.  
+After finishing this problem, I asked other members about how they pass it. And suprisingly, there are many ways to pass this( lots of it using luck to pass, i dont know how using luck can pass the rounds, maybe problem can not give the case where it fail, but i guess luck is one factor of skill (: ). But i will show you my way to pass it (so as to respect the person who give me hint to this problem).
 
+### Strategy
+-   Our first task is to ask the Merchant what is the value of chest_i, i will call this as the temporary state( we dont need to know which is fake or real). At this point, we use 6 question and have 8 questions left.
+-   We dive 6 chest into 2 group. Group 1 contains chest 1, chest 2, chest 3. Group 2 contains chest 4, chest 5, chest 6.
+-   Next, we use 2 question to ask Merchant. We ask the Merchant ``` if there is a fake chest in Group 1( fake chest means chest's answer is lie, from now, i will call a lie is a fake asnwer, fake chest, ...)```. The same question is ask to Group 2. There will be 3 cases total (at this part, we have 6 question left):
+    -   Merchant's answer is ``` YES YES```:  
+        This means Group 1 and Group 2, each group contains a fake answer( whether the ``` YES ``` is fake or real, we will know excatly that each group have 1 fake). So the rest 6 question is Real answer, we just ask the chests's value and it's done.
