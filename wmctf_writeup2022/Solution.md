@@ -9,5 +9,5 @@ G = (336455284570969624475799562568539927480902362153108289561294998143384472762
 3G = (8240596254289477251157504980772167439041663401504657696787046343848644902166655624353107697436635678388969190302189718026343959470011854412337179727187240 : 4413479999185843948404442728411950785256136111461847698098967018173326770728464491960875264034301169184074110521039566669441716138955932362724194843596479 : 1)
 ```
 We are given a file which contains somekind of encryptions like RSA and ECC.
-My first idea is that p (factor of n) might be the modulus of EC, so if we can find the modulus base on 2 points on the curve (G and 3G), we can decrypt c and get the flag.
+My first idea is that p (factor of n) might be the modulus of EC, so if we can find the modulus base on 2 points on the curve (G and 3G), we can decrypt c and get the flag.  
 The idea to get the p
