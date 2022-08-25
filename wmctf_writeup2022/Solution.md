@@ -91,7 +91,35 @@ After finishing this problem, I asked other members about how they pass it. And 
         Our fake answer in each group right now are ``` 0 / 2 ``` or ``` 2 / 0 ``` or ``` 0 / 0 ```.
         Next we ask again the question ``` if there is a fake chest in Group 1 ``` (at this point we have 5 left).  
         There will be 2 case:  
-        -   ``` NO ```: this answer can be fake, because if it's fake, then the previous answer is also fake, and there exist 1 fake answer in group 1, total is 1 + 1 + 1 = 3 (impossible)
-        -   ``` YES ```: either this is real or fake, the Group 2 will be real( ``` NO ``` answer and the chests's state are real). Because if ``` YES ``` is real, we already use 2 fake answer in group1, if it's fake, then the other fake question can not be in group 2(fake answer can only be 0 or 2). Again, ask another question ``` if there is a fake chest in Group 1 ``` (at this point, we have 4 left).  
-            -   If ``` YES ```, the Group1 is definitely contains 1 fake chest, and ``` NO ``` answer is fake, 4 question left, we use to ask the group1 state and it's done
-            -   If ``` NO ```, group 1 is real, we don't need to do anything.
+        
+        -   ``` NO ```: this answer can be fake, because if it's fake, then the previous answer is also fake, and there exist 1 fake answer in group 1, total is 1 + 1 + 1 = 3 (impossible). So the Group 1 is real.  
+            To deal with this case, we use the following algorithm:  
+            Let's assume the temporary state of each chest in Group 2 is ``` 0 0 0 ```. Ask each chest value again(at this point, 2 question remain). There will be 3 case:  
+            -   ``` 0 1 0 ``` or any case containing only 1 different from temporary state, use 2 question to ask the chest 2(or the chest which have the different) value. The cases will be:  
+                ``` 
+                0 0 0
+                0 1 0
+                  1
+                  1
+                ```
+                We chose 1 is the value of chest 2 as when 3 answer is the same, it cannot be fake  
+                ```
+                0 0 0    0 0 0
+                0 1 0 or 0 1 0 (two 0 and two 1)
+                  1        0
+                  0        1
+                ```
+                We chose the 0 (the value we ask from beginner). Because if 0 is fake then the collumn 2 should be ``` 0 1 1 1 ```  
+                ```
+                0 0 0
+                0 1 0 (three 0 and one 1)
+                  0
+                  0
+                ```
+                We chose 0, the value we ask from beginning.
+            -   ``` 0 1 1 ``` or any case that cotaining 2 different from temporary state, the values ``` 0 0 0 ``` are the real value
+            -   ``` 0 0 0 ```, same as case above  
+
+        -   ``` YES ```: either this is real or fake, the Group 2 will be real( ``` NO ``` answer and the chests's state are real). Because if ``` YES ``` is real, we already use 2 fake answer in group1, if it's fake, then the other fake question can not be in group 2(fake answer in group 2 can only be 0 or 2). Again, ask another question ``` if there is a fake chest in Group 1 ``` (at this point, we have 4 left).  
+            -   If ``` YES ```, the Group 1 is definitely contains 1 fake chest, and ``` NO ``` answer is fake, 4 question left, we use to ask the group1 state and it's done
+            -   If ``` NO ```, Group 1 is real, we don't need to do anything.
