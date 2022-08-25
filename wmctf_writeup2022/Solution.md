@@ -78,7 +78,7 @@ Problem's summary:
 -   Each round we have 6 chest, each chest contains either 0 or 1, our problem is to find total 6 chest's state.
 -   We can find chests's state by asking question to the Skeleton Merchant, he will only anwer Yes or No. And we are able to ask him 14 question, but he might lie to us at most twice.
 -   After 14 questions, we have to give the correct chests's state. If the answer wrong even 1 chest, we lose, but if we can pass to 50 rounds, we will be given the flag.  
-After finishing this problem, I asked other members about how they pass it. And suprisingly, there are many ways to pass this( lots of it using luck to pass, i dont know how using luck can pass the rounds, maybe problem can not give the case where it fail, but i guess luck is one factor of skill (: ). But i will show you my way to pass it (so as to respect the person who give me hint to this problem).
+After finishing this problem, I asked other members about how they pass it. And suprisingly, there are many ways to pass this( lots of it using luck to pass, i dont know how using luck can pass the rounds, maybe problem can not give the case where it fail, but i guess luck is one factor of skill (: ). But i will show you my way to pass it.
 
 ### Strategy
 -   Our first task is to ask the Merchant what is the value of chest_i, i will call this as the temporary state( we dont need to know which is fake or real). At this point, we use 6 question and have 8 questions left.
