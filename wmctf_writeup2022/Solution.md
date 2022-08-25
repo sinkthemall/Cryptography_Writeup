@@ -71,3 +71,4 @@ from Crypto.Util.number import long_to_bytes
 flag = (int(a)<<int(404)) | (int(b)<<int(202)) | int(c) 
 print(long_to_bytes(flag))
 ```
+## 2. nanoDiamond
