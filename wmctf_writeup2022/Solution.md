@@ -72,3 +72,7 @@ flag = (int(a)<<int(404)) | (int(b)<<int(202)) | int(c)
 print(long_to_bytes(flag))
 ```
 ## 2. nanoDiamond
+---
+layout: forward
+target: https://github.com/sinkthemall/Cryptography_Writeup/tree/main/wmctf_writeup2022/problem/nanoDiamond
+---
