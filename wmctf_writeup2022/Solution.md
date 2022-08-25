@@ -86,3 +86,12 @@ After finishing this problem, I asked other members about how they pass it. And 
 -   Next, we use 2 question to ask Merchant. We ask the Merchant ``` if there is a fake chest in Group 1( fake chest means chest's answer is lie, from now, i will call a lie is a fake asnwer, fake chest, ...)```. The same question is ask to Group 2. There will be 3 cases total (at this part, we have 6 question left):
     -   Merchant's answer is ``` YES YES```:  
         This means Group 1 and Group 2, each group contains a fake answer( whether the ``` YES ``` is fake or real, we will know excatly that each group have 1 fake). So the rest 6 question is Real answer, we just ask the chests's value and it's done.
+    -   Merchant's answer is ``` NO NO ```:
+        In this case, the fake answer can be ``` 0 2 ``` (0 2 in here means there isn't fake answer in this group1 or there are 2 fake asnwer) in each group . Because if the ``` NO ``` answer is fake, then that group have at least 1 fake answer ( thus 1 fake from ``` NO ``` + 1 fake from Group 1 = 2, we have used up 2 fake answer), and if the ``` NO ``` is real, it means that group have no fake answer, total fake asnwer we know will be = 0.  
+        Our fake answer in each group right now are ``` 0 / 2 ``` or ``` 2 / 0 ``` or ``` 0 / 0 ```.
+        Next we ask again the question ``` if there is a fake chest in Group 1 ``` (at this point we have 5 left).  
+        There will be 2 case:  
+        -   ``` NO ```: this answer can be fake, because if it's fake, then the previous answer is also fake, and there exist 1 fake answer in group 1, total is 1 + 1 + 1 = 3 (impossible)
+        -   ``` YES ```: either this is real or fake, the Group 2 will be real( ``` NO ``` answer and the chests's state are real). Because if ``` YES ``` is real, we already use 2 fake answer in group1, if it's fake, then the other fake question can not be in group 2(fake answer can only be 0 or 2). Again, ask another question ``` if there is a fake chest in Group 1 ``` (at this point, we have 4 left).  
+            -   If ``` YES ```, the Group1 is definitely contains 1 fake chest, and ``` NO ``` answer is fake, 4 question left, we use to ask the group1 state and it's done
+            -   If ``` NO ```, group 1 is real, we don't need to do anything.
