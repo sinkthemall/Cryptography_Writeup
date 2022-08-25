@@ -72,7 +72,7 @@ flag = (int(a)<<int(404)) | (int(b)<<int(202)) | int(c)
 print(long_to_bytes(flag))
 ```
 ## 2. nanoDiamond
-[Problem's source code](https://github.com/sinkthemall/Cryptography_Writeup/tree/main/wmctf_writeup2022/problem/nanoDiamond)
+[Problem's source code](https://github.com/sinkthemall/Cryptography_Writeup/tree/main/wmctf_writeup2022/problem/nanoDiamond)  
 Problem's summary:
 -   In this problem we have to pass exactly 50 rounds.
 -   Each round we have 6 chest, each chest contains either 0 or 1, our problem is to find total 6 chest's state.
