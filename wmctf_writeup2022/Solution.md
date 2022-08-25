@@ -78,7 +78,7 @@ Problem's summary:
 -   Each round we have 6 chest, each chest contains either 0 or 1, our problem is to find total 6 chest's state.
 -   We can find chests's state by asking question to the Skeleton Merchant, he will only anwer Yes or No. And we are able to ask him 14 question, but he might lie to us at most twice.
 -   After 14 questions, we have to give the correct chests's state. If the answer wrong even 1 chest, we lose, but if we can pass to 50 rounds, we will be given the flag.  
-After finishing this problem, I asked other members about how they pass it. And suprisingly, there are many ways to pass this( lots of it using luck to pass, i dont know how using luck can pass the rounds, maybe problem can not give the case where it fail, but i guess luck is one factor of skill (: ). But i will show you my way to pass it.
+After finishing this problem, I asked other members about how they pass it. And suprisingly, there are many ways to pass this( lots of it using luck to pass, i dont know how using luck can pass the rounds, maybe problem can not give the case where it fail, but i guess luck is one factor of skill (: ). But i will show you my way to pass it. My strategy is very complicate, so you want something more simple, you can search ``` Ulam's game ``` to know about the way to solve this.
 
 ### Strategy
 -   Our first task is to ask the Merchant what is the value of chest_i, i will call this as the temporary state( we dont need to know which is fake or real). At this point, we use 6 question and have 8 questions left.
@@ -158,4 +158,42 @@ After finishing this problem, I asked other members about how they pass it. And 
         If ``` YES YES ```, collumn 1 is fake, collumn 2 is real( as two YES answer cannot be fake)  
         If ``` NO NO ```, collumn 1 and 2 is real (two NO answer cannot be fake)
         If ``` YES NO ``` or ``` NO YES ```, this is the hardest case, as we cannot figure out which is fake and real, so this case I let it randomly. But the chance to be in this case is very small ( about 8%). If you are not a fan of gaccha game, or just really bad luck, this definitely works very well.
-About the source code, I won't paste it in here as the source is about 500 codelines. So if you want to know more about it, I will let the link 
+About the source code, I won't paste it in here as the source is about 500 codelines. So if you want to know more about it, I will let the link [here](https://github.com/sinkthemall/Cryptography_Writeup/blob/main/wmctf_writeup2022/solve/nanoDiamond.py)
+### 3.homo
+This one, I didn't make it in tiem. You can find more explaination in https://imp.ress.me/blog/2022-08-22/wmctf-2022/ (my code idea is base on this)
+```python
+pk = eval(open("pubkey.txt").read())
+ct = eval(open("cipher.txt").read())
+def acd_attack(x, rho):
+    R = 2^rho 
+    B = [[0 for i in range(len(x))] for j in range(len(x))]
+    B[0][0] = R 
+    for i in range(1, len(x)):
+        B[0][i] = x[i]
+        B[i][i] = -x[0]
+    B = Matrix(B)
+    for i in B.LLL():
+        if (i[0] != 0) and (i[0] %R == 0):
+            return abs(i[0]//R)
+
+q0 = acd_attack(pk[:7], 192)
+print(q0)
+from Crypto.Util.number import isPrime, long_to_bytes
+sk_approx = (pk[0] // q0) - (2^191)//q0
+print(sk_approx)
+print(int(sk_approx).bit_length())
+sk_approx += 1
+flag = "".join(str((i%sk_approx)%2) for i in ct)
+flag = int(flag, 2)
+print(long_to_bytes(flag))
+
+
+
+```
+FLAG : 
+```
+17195743943555229331660961462727499
+41565572874253689464437825525802665878958533473562648432875965578230785556539072257838190060392315994424904212374664222250474284551715262035741014468770452
+514
+b'sodayo>A<!!$%!$_Easy_G@CDp_ATtaCk'
+```
