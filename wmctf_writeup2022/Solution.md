@@ -10,4 +10,5 @@ G = (336455284570969624475799562568539927480902362153108289561294998143384472762
 ```
 We are given a file which contains somekind of encryptions like RSA and ECC.
 My first idea is that p (factor of n) might be the modulus of EC, so if we can find the modulus base on 2 points on the curve (G and 3G), we can decrypt c and get the flag.  
-The idea to get the p
+The idea to get the p base on two points:
+-   Let's call G and 3G are (x1,y1) and (x2,y2), we know that EC equation is ``` y^2 = x^3 + ax + b ```
