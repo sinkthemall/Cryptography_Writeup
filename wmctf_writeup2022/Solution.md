@@ -1,5 +1,5 @@
-## WMCTF 2022 writeup - Cryptography
-# 1. ECC
+# WMCTF 2022 writeup - Cryptography
+## 1. ECC
 ```
 flag bits: 606
 e = 0x10001
@@ -10,3 +10,4 @@ G = (336455284570969624475799562568539927480902362153108289561294998143384472762
 ```
 We are given a file which contains somekind of encryptions like RSA and ECC.
 My first idea is that p (factor of n) might be the modulus of EC, so if we can find the modulus base on 2 points on the curve (G and 3G), we can decrypt c and get the flag.
+The idea to get the p
