@@ -11,4 +11,12 @@ G = (336455284570969624475799562568539927480902362153108289561294998143384472762
 We are given a file which contains somekind of encryptions like RSA and ECC.
 My first idea is that p (factor of n) might be the modulus of EC, so if we can find the modulus base on 2 points on the curve (G and 3G), we can decrypt c and get the flag.  
 The idea to get the p base on two points:
--   Let's call G and 3G are (x1,y1) and (x2,y2), we know that EC equation is ``` y^2 = x^3 + ax + b ```
+-   Let's call G and 3G are (x1,y1) and (x2,y2)
+-   We know that EC equation is ``` y^2 = x^3 + ax + b ( mod p) ```, if we replace (x1,y1) and (x2,y2) into the equation, we will get 2 different equations ``` y1^2 = x1^3 + ax1 + b ``` and ``` y2^2 = x2^3 + ax2 + b ```, subtracting it and we get 
+``` y2^2 - y1^2 = (x2^3 - x1^3) + a(x2 - x1) ```. At this point, we can find A and B (modulo n).
+-   Define f = x - A(mod n), we can use the small_roots method in sagemath to find the value x by setting ``` beta = 0.5 ```( we already know A is one root of f, but we want to find the smaller root, which is the real A modulo p)
+-   After finding A, we can find p by computing the GCD of (A(mod n) - A(mod p)) with n
+-   Having p and a, we can compute q, d, b easily and restore the flag
+
+But after recovering p,q,d and decrypt C, we notice that it has bit_length less than the original flag's bit_length ``` C's bitlength = 202, flag's bitlength = 606 ```. I guess A and B parameter are also parts of the flag (this one is similar to the threetresures - CorCTF problem), combining them will get the real flag
+
