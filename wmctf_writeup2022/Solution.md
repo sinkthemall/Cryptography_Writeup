@@ -160,7 +160,7 @@ After finishing this problem, I asked other members about how they pass it. And 
         If ``` YES NO ``` or ``` NO YES ```, this is the hardest case, as we cannot figure out which is fake and real, so this case I let it randomly. But the chance to be in this case is very small ( about 8%). If you are not a fan of gaccha game, or just really bad luck, this definitely works very well.
 About the source code, I won't paste it in here as the source is about 500 codelines. So if you want to know more about it, I will let the link [here](https://github.com/sinkthemall/Cryptography_Writeup/blob/main/wmctf_writeup2022/solve/nanoDiamond.py)
 ### 3.homo
-This one, I didn't make it in tiem. You can find more explaination in https://imp.ress.me/blog/2022-08-22/wmctf-2022/ (my code idea is base on this)
+This one, I didn't make it in time. You can find more explaination in https://imp.ress.me/blog/2022-08-22/wmctf-2022/ (my code idea is base on this)
 ```python
 pk = eval(open("pubkey.txt").read())
 ct = eval(open("cipher.txt").read())
