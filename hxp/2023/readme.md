@@ -117,7 +117,7 @@ if __name__ == '__main__':
         print(mkaes([1]+bits).encrypt(b'hxp<3you').hex())
 ```
 There are many ways to solve this challenge, and i will introduce to you one of the trickiest way( considering that you guys have read and understanded the file)
-Lets consider a state : ```r = 0 1 0 0 1 1 0```. For each index i in r and j = i - 1( i and j are adjacent), we will send to server 2 times, the first will be ```r``` with  ```r[i]=0``` and the second will be ```r[j]=0```, then we will receive 2 ciphertext corresponding to 2 params. If 2 ciphertext are same, then ```bit[i]=bit[j]```
+Lets consider a state : ```r = 0 1 0 0 1 1 0```. For each index i in r and j = i - 1( i and j are adjacent and ```r[i]=1 and r[j]=1```), we will send to server 2 times, the first will be ```r``` with  ```r[i]=0``` and the second will be ```r[j]=0```, then we will receive 2 ciphertext corresponding to 2 params. If 2 ciphertext are same, then ```bit[i]=bit[j]```
 else ```bit[i]=bit[j]^1```, repeat this process for all i and we will obtain the key. (You have to prove it yourself. I will not explain further and it will be an exercise for you to practice)
 
 Source code:
