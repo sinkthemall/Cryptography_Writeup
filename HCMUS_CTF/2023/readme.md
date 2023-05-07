@@ -483,4 +483,7 @@ In the first challenge, it just a normal BOF challenge, overflow the first char 
 In the second challenge - coin mining. 2 things need to do:
 -   Find the canary
 -   Find the libc base address
-In the first problem, it's actually not hard as ```read(0, buf, 0x200uLL);``` allow us to read up to 0x200 characters, so just fill the buffer until it reach canary. The ```printf("%s??\n", buf);``` will print all character from buf until it reach 
+Here is the disassemble source code from binary:
+![](https://github.com/sinkthemall/Cryptography_Writeup/blob/main/HCMUS_CTF/2023/coin_mining/coin_mining_source.png)
+In the first problem, it's actually not hard as ```read(0, buf, 0x200uLL);``` allow us to read up to 0x200 characters, so just fill the buffer until it reach canary. The ```printf("%s??\n", buf);``` will print all character from buf until it reach null byte( because we already fill up with "a" bytes, so it also print out the canary), from here, we have the canary and can make ROP gadget.
+In ther second problem
