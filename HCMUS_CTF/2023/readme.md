@@ -15,7 +15,7 @@ openssl enc -aes-256-cbc -K $x -iv $(openssl rand -hex 16) -in flag.bin -out cip
 ```
 Once again, if you look closer, you might notice that the flag had been padded before encrypt, which mean that the first block might not our flag but just the padding. For who don't know, CBC actually only decrypt false on the first block if IV is wrong, but it doesn't affect to the other block. So we just need to throw some randomly IV and we can recover the flag (as we really dont care about the padding).
 
-Insert picture here.
+![Solving screen](https://github.com/sinkthemall/Cryptography_Writeup/blob/main/HCMUS_CTF/2023/bootleg_aes/solve.png)
 
 Flag:
 ```HCMUS-CTF{it5-c4ll3d_pr1v4t3_k3y_crypt09raphy_f0r_4_r4350n}```
