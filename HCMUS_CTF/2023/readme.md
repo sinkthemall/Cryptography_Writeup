@@ -489,7 +489,7 @@ Here is the disassemble source code from binary:
 In the first problem, it's actually not hard as ```read(0, buf, 0x200uLL);``` allow us to read up to 0x200 characters, so just fill the buffer until it reach canary. The ```printf("%s??\n", buf);``` will print all character from buf until it reach null byte( because we already fill up with "a" bytes, so it also print out the canary), from here, we have the canary and can make ROP gadget.
 In the second problem, how do we leak the libc address. Before entering main function, the ELF must first setup things by call __libc_start_main. ![](https://github.com/sinkthemall/Cryptography_Writeup/blob/main/HCMUS_CTF/2023/coin_mining/backtrace.png)
 
-In here, we can leak the return address of main by again: ```printf("%s??\n", buf);``` using the same way( fill up buffer until it reach the return address). And if we can find the return address from libc (which is the actual address, not changing by PIE), we can find the libc base address. After that, we can use all gadget, all function from libc we want.( I am not really good at explain this).
+In here, we can leak the return address of main by again: ```printf("%s??\n", buf);``` using the same way( fill up buffer until it reach the return address). And if we can find the return address from libc (which is the actual address, not changing by PIE), we can find the libc base address. After that, we can use all gadget, all function from libc we want and building the ROPchain to spawn shell.( I am not really good at explain this).
 
 Solution:
 ```python
