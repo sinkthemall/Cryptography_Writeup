@@ -477,7 +477,7 @@ Flag:
 ```HCMUS-CTF{https://www.youtube.com/watch?v=nmgFG7PUHfo}```
 
 # Pwnable
-I solved 2 out of 4.
+I solved 2 out of 4( the last challenge my friend did, but i will replace him explaining how he did)
 Because CTF has end, I cannot find the challenge files(also the server is closed too), so I will explain it by what I can remember.
 ### 1.Python_is_safe
 ```python
