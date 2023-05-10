@@ -475,7 +475,46 @@ You might see that ook is set from the beginning, right? That is, some case, it 
 
 Flag:
 ```HCMUS-CTF{https://www.youtube.com/watch?v=nmgFG7PUHfo}```
+### UPDATE
+I am not sure if FFT can work on this challenge(stupid idea, you don't need to learn it to solve, consider it as a new knowledge), but there is other way for solving this challenge. The idea is actually taken from 1 of technique in competitive programming called ```Meet in the middle```. So to understand more about this, let's talk about similar problem - ```Knapsack problem```: 
+```
+Given a set a_1, a_2, a_3, ..., a_n, find a subset that have sum equal S( S is given).
+```
+The first idea come in mind is bruteforce bitmask:
+```c++
+for(int mask = 0; mask < (1 << n); ++mask)
+    if (sum_base_on_mask(mask) == S)
+    {
+        cout << "Found a subset mask\n";
+        break;
+    }
+```
+Basically, the code above will bruteforce the mask, if the i-th bit is 1, then a_i is chosen in subset, then take the sum of chosen subset and testing if that subset is equal to S. And the complexity of this algorithm will equal ```O(2 ^ n)```, with n is the size of set. As you can see, the f = 2 ^ n function increasing very fast, with n = 20, 2 ^ n is already greater than 1.000.000 , which make the time need to bruteforce it longer. How can we optimize this, is there another way that less time but still sovle the problem? Yes, there is. Meet in the middle come to the play:
+```c++
+map<int,int> lmao;
+for(int mask = 0; mask < (1 << (n / 2)); ++mask)
+    lmao[sum_base_on_mask(mask)] = mask;
 
+for(int mask = (1 << (n/2)); mask < (1 << n); ++mask)
+    if (lmao[S - sum_base_on_mask(mask)] != 0)
+    {
+        cout << "Found a subset mask\n";
+        break;
+    }
+```
+You may wonder: what the hell is going on? I will explain this : first, divide the set into 2 equal size subset, called it sub1 and sub2. On the first for loop, I simply bruteforce first subset. In the second loop, I also bruteforce the subset, but with the condition ```lmao[S - sum_base_on_mask(mask)] != 0``` which means if existed a subset on sub1 that when plus the current subset from sub2 have the sum equal S, then we found a subset. You can find more about MITM on (this link)[https://www.geeksforgeeks.org/meet-in-the-middle/]. So how does it optimize, well, the first for loop take about O(2 ^ (n/2). logg) (logn because I use map to store data), in the second loop it take about O(2 ^ (n/2) . logn), the total complexity will be O(2 ^ (n/2). logn . 2) ~ O(2 ^ (n /2).logn). Big improve right? If you use another data structure that have lower finding time( for example: hash table, ...), the complexity even gonna reduce more: O(2 ^ (n / 2)). 
+
+Let's move back to our problem then. How do MITM gonna help us in this challenge? Remember the key have 4 rows, 4 columns, and each data is mapping to 1 of the rows( which means 4 bytes) right? So if you can find a way to bruteforce 4 bytes in time, we can find 4 byte of a row, and repeat this process 4 time, we will find the key.
+Here is the pseudo algorithm to do that:
+```
+Step 1 : split 4 bytes into two 2-byte s.
+Step 2 : create a lookup table for first 2-byte.
+Step 3 : bruteforce second 2-byte, and check if there is exist first 2-byte that have sum(first 2-byte + second 2-byte) = our expected result. If yes, we found a possible key (I said possible because there maybe be more than 1 case that have the same sum), if no, continue step 3.
+Step 4 : Output the key that we find.
+```
+So how does this help? Well, instead of bruteforce 4 bytes ~ which equal to 2 ^ 32 case, we only need to bruteforce 2 ^ 16 case, then simple using a lookup table to find, and the total times we need to bruteforce is 2 ^ 16 . 16 (which is pretty good for bruteforcing right?). Repeat this algorithm 4 times( with other data) and we will recover the key.
+About the source code, I will update in the future.
+ 
 # Pwnable
 I solved 2 out of 4( the last challenge my friend did, but i will replace him explaining how he did)
 Because CTF has end, I cannot find the challenge files(also the server is closed too), so I will explain it by what I can remember.
