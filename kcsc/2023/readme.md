@@ -249,7 +249,9 @@ while True:
         sys.exit(0)
 ```
 SECCON CTF 2022 Finals - authenticator problem ????
+
 I think there must be MD5 collision in here :D.
+
 In order to do this challenge, I used ```Sagemath``` for solving . Define the polynomial ```f = X``` as the secret we need to find, the modulus polynomial is ```mod = x^64 + PR(g)``` with ```PX(g)``` correspond to the polynomial with ```g``` as the coefficient. Then the shift left operator by 1 is actually multiply by x, xor is sum of polynomials,... After that, redefine the crc64 function to sagemath version and use f.roots() to find the solution => secret recover.
 
 ```python
