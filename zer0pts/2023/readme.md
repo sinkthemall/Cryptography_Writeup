@@ -121,6 +121,28 @@ In case (1), the equation can be factored into : ```a^33 + 1(1) = (a + 1).(a^32 
 In case (2), the equation can be factored into : ```a^33 - 1(2) = (a - 1).(a^32 + a^31 + a^30 + ... + 1)```
 If ```a+1``` is a square number (we can  confirm that by ```r1 and r2```), and ```a^32 - a^31 + a^30 - ... + 1``` is also s square number, we can conclude that the result of ```a^33 + 1``` is also square number. If one of them is, but the other not, then it can never be a square number. I'm not sure about the case 2 of them are not square number( sometimes, it can be the case where both of them are not square number, but the product is the square number), but the chance is small.
 
-Source:
+Source (this one was from my friend [vnc](https://github.com/idk-wh0am1)):
 ```python
+from pwn import *
+from Crypto.Util.number import *
+
+context.log_level = 'debug'
+# 1 + a + a^2 + a^3 + ... + a^32
+# 1 - a + a^2 - a^3 + ... + a^32
+
+def solve():
+    io.recvuntil(b"Random 1: "); r1 = int(io.recvline(), 16)
+    io.recvuntil(b"Random 2: "); r2 = int(io.recvline(), 16)
+
+    ans = int((r1 >> 31) ^ (r2 & 1) == 0)
+    io.sendlineafter(b": ", str(ans).encode())
+io = remote("crypto.2023.zer0pts.com", 10666)
+
+io.sendlineafter(b"Bob's seed 1: ", b"1")
+io.sendlineafter(b"Bob's seed 2: ", b"-1")
+
+for _ in range(77):
+    solve()
+
+io.interactive()
 ```
