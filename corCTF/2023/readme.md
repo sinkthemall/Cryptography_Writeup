@@ -1,5 +1,4 @@
 # corCTF 2023 Cryptography writeup
-Need explaination? DM me
 
 # Fizzbuzz100
 ```python
@@ -36,6 +35,8 @@ while True:
         out = pt
     print(out)
 ```
+
+Typical Blind signature attack challenge :D
 
 Script:
 ```python
